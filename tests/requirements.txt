@@ -1,0 +1,8 @@
+# Integration/QA test deps (tests/contract, tests/e2e, fixtures/scripts)
+pytest>=8
+httpx>=0.27
+fastapi>=0.110
+pydantic>=2.6
+python-multipart>=0.0.9
+openapi-spec-validator>=0.7
+py-solc-x>=2.0
