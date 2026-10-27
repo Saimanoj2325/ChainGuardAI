@@ -1,0 +1,487 @@
+[
+  {
+    "version": "0.8.24+commit.e11b9ed9.Emscripten.clang",
+    "ok": true,
+    "errors": [],
+    "warnings": 0,
+    "contracts": [
+      "UpgradeableVault"
+    ],
+    "backend": "solcjs",
+    "file": "vulnerable/access_control_initializer.sol",
+    "category": "vulnerable"
+  },
+  {
+    "version": "0.8.24+commit.e11b9ed9.Emscripten.clang",
+    "ok": true,
+    "errors": [],
+    "warnings": 0,
+    "contracts": [
+      "Treasury"
+    ],
+    "backend": "solcjs",
+    "file": "vulnerable/access_control_owner.sol",
+    "category": "vulnerable"
+  },
+  {
+    "version": "0.8.24+commit.e11b9ed9.Emscripten.clang",
+    "ok": true,
+    "errors": [],
+    "warnings": 0,
+    "contracts": [
+      "CoinFlip"
+    ],
+    "backend": "solcjs",
+    "file": "vulnerable/bad_randomness.sol",
+    "category": "vulnerable"
+  },
+  {
+    "version": "0.8.24+commit.e11b9ed9.Emscripten.clang",
+    "ok": true,
+    "errors": [],
+    "warnings": 0,
+    "contracts": [
+      "ProxyWallet"
+    ],
+    "backend": "solcjs",
+    "file": "vulnerable/delegatecall.sol",
+    "category": "vulnerable"
+  },
+  {
+    "version": "0.6.12+commit.27d51765.Emscripten.clang",
+    "ok": true,
+    "errors": [],
+    "warnings": 0,
+    "contracts": [
+      "KingOfTheHill"
+    ],
+    "backend": "solcjs",
+    "file": "vulnerable/dos_push_payment.sol",
+    "category": "vulnerable"
+  },
+  {
+    "version": "0.8.24+commit.e11b9ed9.Emscripten.clang",
+    "ok": true,
+    "errors": [],
+    "warnings": 0,
+    "contracts": [
+      "Dividends"
+    ],
+    "backend": "solcjs",
+    "file": "vulnerable/dos_unbounded_loop.sol",
+    "category": "vulnerable"
+  },
+  {
+    "version": "0.4.26+commit.4563c3fc.Emscripten.clang",
+    "ok": true,
+    "errors": [],
+    "warnings": 1,
+    "contracts": [
+      "BatchToken"
+    ],
+    "backend": "solcjs",
+    "file": "vulnerable/integer_overflow.sol",
+    "category": "vulnerable"
+  },
+  {
+    "version": "0.6.12+commit.27d51765.Emscripten.clang",
+    "ok": true,
+    "errors": [],
+    "warnings": 0,
+    "contracts": [
+      "TimeLock"
+    ],
+    "backend": "solcjs",
+    "file": "vulnerable/integer_overflow_timelock.sol",
+    "category": "vulnerable"
+  },
+  {
+    "version": "0.8.24+commit.e11b9ed9.Emscripten.clang",
+    "ok": true,
+    "errors": [],
+    "warnings": 0,
+    "contracts": [
+      "EtherBank"
+    ],
+    "backend": "solcjs",
+    "file": "vulnerable/reentrancy_classic.sol",
+    "category": "vulnerable"
+  },
+  {
+    "version": "0.6.12+commit.27d51765.Emscripten.clang",
+    "ok": true,
+    "errors": [],
+    "warnings": 0,
+    "contracts": [
+      "SharedLedger"
+    ],
+    "backend": "solcjs",
+    "file": "vulnerable/reentrancy_cross_function.sol",
+    "category": "vulnerable"
+  },
+  {
+    "version": "0.6.12+commit.27d51765.Emscripten.clang",
+    "ok": true,
+    "errors": [],
+    "warnings": 0,
+    "contracts": [
+      "FifteenSecondGame"
+    ],
+    "backend": "solcjs",
+    "file": "vulnerable/timestamp_dependence.sol",
+    "category": "vulnerable"
+  },
+  {
+    "version": "0.8.24+commit.e11b9ed9.Emscripten.clang",
+    "ok": true,
+    "errors": [],
+    "warnings": 0,
+    "contracts": [
+      "OriginWallet"
+    ],
+    "backend": "solcjs",
+    "file": "vulnerable/tx_origin.sol",
+    "category": "vulnerable"
+  },
+  {
+    "version": "0.4.26+commit.4563c3fc.Emscripten.clang",
+    "ok": true,
+    "errors": [],
+    "warnings": 3,
+    "contracts": [
+      "PayoutBox"
+    ],
+    "backend": "solcjs",
+    "file": "vulnerable/unchecked_call.sol",
+    "category": "vulnerable"
+  },
+  {
+    "version": "0.6.12+commit.27d51765.Emscripten.clang",
+    "ok": true,
+    "errors": [],
+    "warnings": 0,
+    "contracts": [
+      "Piggy"
+    ],
+    "backend": "solcjs",
+    "file": "vulnerable/unprotected_selfdestruct.sol",
+    "category": "vulnerable"
+  },
+  {
+    "version": "0.8.24+commit.e11b9ed9.Emscripten.clang",
+    "ok": true,
+    "errors": [],
+    "warnings": 0,
+    "contracts": [
+      "UpgradeableVault"
+    ],
+    "backend": "solcjs",
+    "file": "patched/access_control_initializer.sol",
+    "category": "patched"
+  },
+  {
+    "version": "0.8.24+commit.e11b9ed9.Emscripten.clang",
+    "ok": true,
+    "errors": [],
+    "warnings": 0,
+    "contracts": [
+      "Treasury"
+    ],
+    "backend": "solcjs",
+    "file": "patched/access_control_owner.sol",
+    "category": "patched"
+  },
+  {
+    "version": "0.8.24+commit.e11b9ed9.Emscripten.clang",
+    "ok": true,
+    "errors": [],
+    "warnings": 0,
+    "contracts": [
+      "CoinFlip"
+    ],
+    "backend": "solcjs",
+    "file": "patched/bad_randomness.sol",
+    "category": "patched"
+  },
+  {
+    "version": "0.8.24+commit.e11b9ed9.Emscripten.clang",
+    "ok": true,
+    "errors": [],
+    "warnings": 0,
+    "contracts": [
+      "ProxyWallet"
+    ],
+    "backend": "solcjs",
+    "file": "patched/delegatecall.sol",
+    "category": "patched"
+  },
+  {
+    "version": "0.6.12+commit.27d51765.Emscripten.clang",
+    "ok": true,
+    "errors": [],
+    "warnings": 0,
+    "contracts": [
+      "KingOfTheHill"
+    ],
+    "backend": "solcjs",
+    "file": "patched/dos_push_payment.sol",
+    "category": "patched"
+  },
+  {
+    "version": "0.8.24+commit.e11b9ed9.Emscripten.clang",
+    "ok": true,
+    "errors": [],
+    "warnings": 0,
+    "contracts": [
+      "Dividends"
+    ],
+    "backend": "solcjs",
+    "file": "patched/dos_unbounded_loop.sol",
+    "category": "patched"
+  },
+  {
+    "version": "0.4.26+commit.4563c3fc.Emscripten.clang",
+    "ok": true,
+    "errors": [],
+    "warnings": 1,
+    "contracts": [
+      "BatchToken",
+      "SafeMath"
+    ],
+    "backend": "solcjs",
+    "file": "patched/integer_overflow.sol",
+    "category": "patched"
+  },
+  {
+    "version": "0.8.24+commit.e11b9ed9.Emscripten.clang",
+    "ok": true,
+    "errors": [],
+    "warnings": 0,
+    "contracts": [
+      "TimeLock"
+    ],
+    "backend": "solcjs",
+    "file": "patched/integer_overflow_timelock.sol",
+    "category": "patched"
+  },
+  {
+    "version": "0.8.24+commit.e11b9ed9.Emscripten.clang",
+    "ok": true,
+    "errors": [],
+    "warnings": 0,
+    "contracts": [
+      "EtherBank"
+    ],
+    "backend": "solcjs",
+    "file": "patched/reentrancy_classic.sol",
+    "category": "patched"
+  },
+  {
+    "version": "0.6.12+commit.27d51765.Emscripten.clang",
+    "ok": true,
+    "errors": [],
+    "warnings": 0,
+    "contracts": [
+      "SharedLedger"
+    ],
+    "backend": "solcjs",
+    "file": "patched/reentrancy_cross_function.sol",
+    "category": "patched"
+  },
+  {
+    "version": "0.6.12+commit.27d51765.Emscripten.clang",
+    "ok": true,
+    "errors": [],
+    "warnings": 0,
+    "contracts": [
+      "FifteenSecondGame"
+    ],
+    "backend": "solcjs",
+    "file": "patched/timestamp_dependence.sol",
+    "category": "patched"
+  },
+  {
+    "version": "0.8.24+commit.e11b9ed9.Emscripten.clang",
+    "ok": true,
+    "errors": [],
+    "warnings": 0,
+    "contracts": [
+      "OriginWallet"
+    ],
+    "backend": "solcjs",
+    "file": "patched/tx_origin.sol",
+    "category": "patched"
+  },
+  {
+    "version": "0.4.26+commit.4563c3fc.Emscripten.clang",
+    "ok": true,
+    "errors": [],
+    "warnings": 1,
+    "contracts": [
+      "PayoutBox"
+    ],
+    "backend": "solcjs",
+    "file": "patched/unchecked_call.sol",
+    "category": "patched"
+  },
+  {
+    "version": "0.6.12+commit.27d51765.Emscripten.clang",
+    "ok": true,
+    "errors": [],
+    "warnings": 0,
+    "contracts": [
+      "Piggy"
+    ],
+    "backend": "solcjs",
+    "file": "patched/unprotected_selfdestruct.sol",
+    "category": "patched"
+  },
+  {
+    "version": "0.8.24+commit.e11b9ed9.Emscripten.clang",
+    "ok": true,
+    "errors": [],
+    "warnings": 0,
+    "contracts": [
+      "CoarseTimelock"
+    ],
+    "backend": "solcjs",
+    "file": "benign/coarse_timelock.sol",
+    "category": "benign"
+  },
+  {
+    "version": "0.8.24+commit.e11b9ed9.Emscripten.clang",
+    "ok": true,
+    "errors": [],
+    "warnings": 0,
+    "contracts": [
+      "MultiSigLite"
+    ],
+    "backend": "solcjs",
+    "file": "benign/multisig_lite.sol",
+    "category": "benign"
+  },
+  {
+    "version": "0.6.12+commit.27d51765.Emscripten.clang",
+    "ok": true,
+    "errors": [],
+    "warnings": 0,
+    "contracts": [
+      "PullPaymentEscrow"
+    ],
+    "backend": "solcjs",
+    "file": "benign/pull_payment_escrow.sol",
+    "category": "benign"
+  },
+  {
+    "version": "0.8.24+commit.e11b9ed9.Emscripten.clang",
+    "ok": true,
+    "errors": [],
+    "warnings": 0,
+    "contracts": [
+      "SimpleStorage"
+    ],
+    "backend": "solcjs",
+    "file": "benign/simple_storage.sol",
+    "category": "benign"
+  },
+  {
+    "version": "0.8.24+commit.e11b9ed9.Emscripten.clang",
+    "ok": true,
+    "errors": [],
+    "warnings": 0,
+    "contracts": [
+      "SimpleToken"
+    ],
+    "backend": "solcjs",
+    "file": "benign/simple_token.sol",
+    "category": "benign"
+  },
+  {
+    "ok": false,
+    "version": null,
+    "errors": [
+      "not valid UTF-8 (not compiled)"
+    ],
+    "backend": "none",
+    "file": "malformed/binary_garbage.sol",
+    "category": "malformed"
+  },
+  {
+    "ok": false,
+    "version": null,
+    "errors": [
+      "no exact pragma version found (not compiled)"
+    ],
+    "backend": "none",
+    "file": "malformed/empty.sol",
+    "category": "malformed"
+  },
+  {
+    "version": "0.8.24+commit.e11b9ed9.Emscripten.clang",
+    "ok": true,
+    "errors": [],
+    "warnings": 0,
+    "contracts": [
+      "LongLine"
+    ],
+    "backend": "solcjs",
+    "file": "malformed/long_line.sol",
+    "category": "malformed"
+  },
+  {
+    "ok": false,
+    "version": null,
+    "errors": [
+      "not valid UTF-8 (not compiled)"
+    ],
+    "backend": "none",
+    "file": "malformed/non_utf8.sol",
+    "category": "malformed"
+  },
+  {
+    "version": "0.8.24+commit.e11b9ed9.Emscripten.clang",
+    "ok": false,
+    "errors": [
+      "ParserError: Expected ';' but got 'function'\n --> syntax_error.sol:8:5:\n  |\n8 |     function set(uint256 v) external {\n  |     ^^^^^^^^\n\n"
+    ],
+    "warnings": 0,
+    "contracts": [],
+    "backend": "solcjs",
+    "file": "malformed/syntax_error.sol",
+    "category": "malformed"
+  },
+  {
+    "ok": false,
+    "version": "0.3.0",
+    "errors": [
+      "pragma 0.3.0 predates every available solc build"
+    ],
+    "backend": "none",
+    "file": "malformed/unsupported_pragma.sol",
+    "category": "malformed"
+  },
+  {
+    "version": "0.8.24+commit.e11b9ed9.Emscripten.clang",
+    "ok": false,
+    "errors": [
+      "ParserError: Maximum recursion depth reached during parsing.\n --> deep_nesting.sol:7:266:\n  |\n7 |  ... ((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((( ...\n  |                                         ^\n\n"
+    ],
+    "warnings": 0,
+    "contracts": [],
+    "backend": "solcjs",
+    "file": "resource/deep_nesting.sol",
+    "category": "resource"
+  },
+  {
+    "version": "0.8.24+commit.e11b9ed9.Emscripten.clang",
+    "ok": true,
+    "errors": [],
+    "warnings": 0,
+    "contracts": [
+      "ManyFunctions"
+    ],
+    "backend": "solcjs",
+    "file": "resource/many_functions.sol",
+    "category": "resource"
+  }
+]

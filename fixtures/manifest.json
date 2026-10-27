@@ -1,0 +1,1149 @@
+{
+  "schema": "chainguard-fixture-manifest/1",
+  "synthetic": true,
+  "notice": "SYNTHETIC hand-written fixtures for integration testing. Never report results on these as benchmark metrics.",
+  "max_upload_bytes": 524288,
+  "outcome_vocabulary": [
+    "job_completed",
+    "completed_degraded",
+    "job_failed",
+    "rejected_413",
+    "rejected_4xx",
+    "server_error",
+    "timeout",
+    "transport_error"
+  ],
+  "line_numbering": "1-based, inclusive; computed from anchors by fixtures/scripts/build_manifest.py",
+  "fixtures": [
+    {
+      "path": "fixtures/contracts/vulnerable/reentrancy_classic.sol",
+      "category": "vulnerable",
+      "synthetic": true,
+      "sha256": "4f3a2f0d374ba3b3cddbf720b6c227c3b0c02dcf5cba490c6bcf40e447632d95",
+      "size_bytes": 659,
+      "pragma": "0.8.24",
+      "contracts": [
+        "EtherBank"
+      ],
+      "expected_outcome": "analyze",
+      "accept": [
+        "job_completed"
+      ],
+      "expected_findings": [
+        {
+          "vuln_class": "reentrancy",
+          "function": "withdraw",
+          "lines": [
+            {
+              "start": 15,
+              "end": 17
+            }
+          ],
+          "function_lines": {
+            "start": 12,
+            "end": 18
+          },
+          "anchors": [
+            "msg.sender.call{value: amount}",
+            "balances[msg.sender] = 0;"
+          ],
+          "note": "external call before balance reset (0.8.x; checked arithmetic does not help)"
+        }
+      ],
+      "acceptable_extra_classes": [],
+      "counterpart": "fixtures/contracts/patched/reentrancy_classic.sol"
+    },
+    {
+      "path": "fixtures/contracts/vulnerable/reentrancy_cross_function.sol",
+      "category": "vulnerable",
+      "synthetic": true,
+      "sha256": "0045b66d4af057215decb1e5f5d3a5e3f7a545ae214e953f91f02fb8122c0361",
+      "size_bytes": 883,
+      "pragma": "0.6.12",
+      "contracts": [
+        "SharedLedger"
+      ],
+      "expected_outcome": "analyze",
+      "accept": [
+        "job_completed"
+      ],
+      "expected_findings": [
+        {
+          "vuln_class": "reentrancy",
+          "function": "withdrawBalance",
+          "lines": [
+            {
+              "start": 21,
+              "end": 23
+            }
+          ],
+          "function_lines": {
+            "start": 19,
+            "end": 24
+          },
+          "anchors": [
+            "msg.sender.call{value: amountToWithdraw}",
+            "userBalances[msg.sender] = 0;"
+          ],
+          "related_functions": [
+            "transfer"
+          ],
+          "note": "re-enter transfer() during the call while balance is still set"
+        }
+      ],
+      "acceptable_extra_classes": [],
+      "counterpart": "fixtures/contracts/patched/reentrancy_cross_function.sol"
+    },
+    {
+      "path": "fixtures/contracts/vulnerable/unchecked_call.sol",
+      "category": "vulnerable",
+      "synthetic": true,
+      "sha256": "82ecdbd5647a119fef8e7e815d0d9deda27b050930bd521fd3cf7f96030b8032",
+      "size_bytes": 680,
+      "pragma": "0.4.26",
+      "contracts": [
+        "PayoutBox"
+      ],
+      "expected_outcome": "analyze",
+      "accept": [
+        "job_completed"
+      ],
+      "expected_findings": [
+        {
+          "vuln_class": "unchecked_call",
+          "function": "payOut",
+          "lines": [
+            {
+              "start": 20,
+              "end": 20
+            }
+          ],
+          "function_lines": {
+            "start": 17,
+            "end": 21
+          },
+          "anchors": [
+            "msg.sender.send(amount);"
+          ]
+        },
+        {
+          "vuln_class": "unchecked_call",
+          "function": "forward",
+          "lines": [
+            {
+              "start": 25,
+              "end": 25
+            }
+          ],
+          "function_lines": {
+            "start": 23,
+            "end": 26
+          },
+          "anchors": [
+            "target.call.value(amount)();"
+          ]
+        }
+      ],
+      "acceptable_extra_classes": [
+        "other"
+      ],
+      "counterpart": "fixtures/contracts/patched/unchecked_call.sol"
+    },
+    {
+      "path": "fixtures/contracts/vulnerable/tx_origin.sol",
+      "category": "vulnerable",
+      "synthetic": true,
+      "sha256": "883e2394e9a35c20ba4e11448d336b2c5ddfb7962b33a038e22b27907e22675a",
+      "size_bytes": 429,
+      "pragma": "0.8.24",
+      "contracts": [
+        "OriginWallet"
+      ],
+      "expected_outcome": "analyze",
+      "accept": [
+        "job_completed"
+      ],
+      "expected_findings": [
+        {
+          "vuln_class": "tx_origin",
+          "function": "transferTo",
+          "lines": [
+            {
+              "start": 15,
+              "end": 15
+            }
+          ],
+          "function_lines": {
+            "start": 14,
+            "end": 17
+          },
+          "anchors": [
+            "tx.origin == owner"
+          ]
+        }
+      ],
+      "acceptable_extra_classes": [],
+      "counterpart": "fixtures/contracts/patched/tx_origin.sol"
+    },
+    {
+      "path": "fixtures/contracts/vulnerable/timestamp_dependence.sol",
+      "category": "vulnerable",
+      "synthetic": true,
+      "sha256": "e1abd2fd5def9522f8d4ffb5fbbf07b4ca5fb381b8713383d77467f675679180",
+      "size_bytes": 510,
+      "pragma": "0.6.12",
+      "contracts": [
+        "FifteenSecondGame"
+      ],
+      "expected_outcome": "analyze",
+      "accept": [
+        "job_completed"
+      ],
+      "expected_findings": [
+        {
+          "vuln_class": "timestamp_dependence",
+          "function": "play",
+          "lines": [
+            {
+              "start": 12,
+              "end": 14
+            }
+          ],
+          "function_lines": {
+            "start": 10,
+            "end": 17
+          },
+          "anchors": [
+            "require(now != pastBlockTime",
+            "if (now % 15 == 0)"
+          ]
+        }
+      ],
+      "acceptable_extra_classes": [
+        "bad_randomness"
+      ],
+      "counterpart": "fixtures/contracts/patched/timestamp_dependence.sol"
+    },
+    {
+      "path": "fixtures/contracts/vulnerable/integer_overflow.sol",
+      "category": "vulnerable",
+      "synthetic": true,
+      "sha256": "9fc016d50109630e4dd50bc36c76b85f055256bbe73d4a5aef389e3f97022400",
+      "size_bytes": 1024,
+      "pragma": "0.4.26",
+      "contracts": [
+        "BatchToken"
+      ],
+      "expected_outcome": "analyze",
+      "accept": [
+        "job_completed"
+      ],
+      "expected_findings": [
+        {
+          "vuln_class": "integer_overflow",
+          "function": "transfer",
+          "lines": [
+            {
+              "start": 15,
+              "end": 16
+            }
+          ],
+          "function_lines": {
+            "start": 14,
+            "end": 19
+          },
+          "anchors": [
+            "balances[msg.sender] - value >= 0",
+            "balances[msg.sender] -= value;"
+          ]
+        },
+        {
+          "vuln_class": "integer_overflow",
+          "function": "batchTransfer",
+          "lines": [
+            {
+              "start": 22,
+              "end": 22
+            }
+          ],
+          "function_lines": {
+            "start": 21,
+            "end": 30
+          },
+          "anchors": [
+            "receivers.length * value"
+          ]
+        }
+      ],
+      "acceptable_extra_classes": [],
+      "counterpart": "fixtures/contracts/patched/integer_overflow.sol"
+    },
+    {
+      "path": "fixtures/contracts/vulnerable/integer_overflow_timelock.sol",
+      "category": "vulnerable",
+      "synthetic": true,
+      "sha256": "ed98bb880fb9f90790fea0c3d3c1de90e18392ce50843837064c773143087efa",
+      "size_bytes": 778,
+      "pragma": "0.6.12",
+      "contracts": [
+        "TimeLock"
+      ],
+      "expected_outcome": "analyze",
+      "accept": [
+        "job_completed"
+      ],
+      "expected_findings": [
+        {
+          "vuln_class": "integer_overflow",
+          "function": "increaseLockTime",
+          "lines": [
+            {
+              "start": 15,
+              "end": 15
+            }
+          ],
+          "function_lines": {
+            "start": 14,
+            "end": 16
+          },
+          "anchors": [
+            "lockTime[msg.sender] += secondsToIncrease;"
+          ]
+        }
+      ],
+      "acceptable_extra_classes": [
+        "timestamp_dependence"
+      ],
+      "counterpart": "fixtures/contracts/patched/integer_overflow_timelock.sol"
+    },
+    {
+      "path": "fixtures/contracts/vulnerable/access_control_owner.sol",
+      "category": "vulnerable",
+      "synthetic": true,
+      "sha256": "96d02815be6045e2e739e928b18157a8cb54d1e1cda99f3f2dc33b05d153c337",
+      "size_bytes": 555,
+      "pragma": "0.8.24",
+      "contracts": [
+        "Treasury"
+      ],
+      "expected_outcome": "analyze",
+      "accept": [
+        "job_completed"
+      ],
+      "expected_findings": [
+        {
+          "vuln_class": "access_control",
+          "function": "setOwner",
+          "lines": [
+            {
+              "start": 17,
+              "end": 18
+            }
+          ],
+          "function_lines": {
+            "start": 17,
+            "end": 19
+          },
+          "anchors": [
+            "function setOwner",
+            "owner = newOwner;"
+          ]
+        }
+      ],
+      "acceptable_extra_classes": [],
+      "counterpart": "fixtures/contracts/patched/access_control_owner.sol"
+    },
+    {
+      "path": "fixtures/contracts/vulnerable/access_control_initializer.sol",
+      "category": "vulnerable",
+      "synthetic": true,
+      "sha256": "c33c1db8f589a27b29960604d187d72b54bc269d2fde19f363a8a8799186ba0e",
+      "size_bytes": 582,
+      "pragma": "0.8.24",
+      "contracts": [
+        "UpgradeableVault"
+      ],
+      "expected_outcome": "analyze",
+      "accept": [
+        "job_completed"
+      ],
+      "expected_findings": [
+        {
+          "vuln_class": "access_control",
+          "function": "initialize",
+          "lines": [
+            {
+              "start": 9,
+              "end": 11
+            }
+          ],
+          "function_lines": {
+            "start": 9,
+            "end": 12
+          },
+          "anchors": [
+            "function initialize",
+            "withdrawLimit = _limit;"
+          ]
+        }
+      ],
+      "acceptable_extra_classes": [],
+      "counterpart": "fixtures/contracts/patched/access_control_initializer.sol"
+    },
+    {
+      "path": "fixtures/contracts/vulnerable/delegatecall.sol",
+      "category": "vulnerable",
+      "synthetic": true,
+      "sha256": "cf4aa2a9a183fb13f6987b18c1cadf33202298daddb2cc61d62f96196aa8bdf4",
+      "size_bytes": 512,
+      "pragma": "0.8.24",
+      "contracts": [
+        "ProxyWallet"
+      ],
+      "expected_outcome": "analyze",
+      "accept": [
+        "job_completed"
+      ],
+      "expected_findings": [
+        {
+          "vuln_class": "delegatecall",
+          "function": "execute",
+          "lines": [
+            {
+              "start": 15,
+              "end": 15
+            }
+          ],
+          "function_lines": {
+            "start": 13,
+            "end": 18
+          },
+          "anchors": [
+            "target.delegatecall(data)"
+          ]
+        }
+      ],
+      "acceptable_extra_classes": [
+        "access_control"
+      ],
+      "counterpart": "fixtures/contracts/patched/delegatecall.sol"
+    },
+    {
+      "path": "fixtures/contracts/vulnerable/unprotected_selfdestruct.sol",
+      "category": "vulnerable",
+      "synthetic": true,
+      "sha256": "61d1e93d41b7360251774082cea9b8c67e082ce0cb1a0ad74ab725a061b9029f",
+      "size_bytes": 358,
+      "pragma": "0.6.12",
+      "contracts": [
+        "Piggy"
+      ],
+      "expected_outcome": "analyze",
+      "accept": [
+        "job_completed"
+      ],
+      "expected_findings": [
+        {
+          "vuln_class": "unprotected_selfdestruct",
+          "function": "close",
+          "lines": [
+            {
+              "start": 15,
+              "end": 15
+            }
+          ],
+          "function_lines": {
+            "start": 14,
+            "end": 16
+          },
+          "anchors": [
+            "selfdestruct(msg.sender);"
+          ]
+        }
+      ],
+      "acceptable_extra_classes": [
+        "access_control"
+      ],
+      "counterpart": "fixtures/contracts/patched/unprotected_selfdestruct.sol"
+    },
+    {
+      "path": "fixtures/contracts/vulnerable/dos_unbounded_loop.sol",
+      "category": "vulnerable",
+      "synthetic": true,
+      "sha256": "f543457be8380697c1e60188be3a4ca89a12f5635d1b7c64819f7c4229364a9d",
+      "size_bytes": 693,
+      "pragma": "0.8.24",
+      "contracts": [
+        "Dividends"
+      ],
+      "expected_outcome": "analyze",
+      "accept": [
+        "job_completed"
+      ],
+      "expected_findings": [
+        {
+          "vuln_class": "denial_of_service",
+          "function": "distribute",
+          "lines": [
+            {
+              "start": 21,
+              "end": 22
+            }
+          ],
+          "function_lines": {
+            "start": 18,
+            "end": 24
+          },
+          "anchors": [
+            "for (uint256 i = 0; i < shareholders.length; i++)",
+            "shareholders[i].transfer(share);"
+          ]
+        }
+      ],
+      "acceptable_extra_classes": [
+        "other"
+      ],
+      "counterpart": "fixtures/contracts/patched/dos_unbounded_loop.sol"
+    },
+    {
+      "path": "fixtures/contracts/vulnerable/dos_push_payment.sol",
+      "category": "vulnerable",
+      "synthetic": true,
+      "sha256": "1a19d6ba5b563003ef399fb3956e3076d7cb5d92438c9cbe79215f045b850df0",
+      "size_bytes": 434,
+      "pragma": "0.6.12",
+      "contracts": [
+        "KingOfTheHill"
+      ],
+      "expected_outcome": "analyze",
+      "accept": [
+        "job_completed"
+      ],
+      "expected_findings": [
+        {
+          "vuln_class": "denial_of_service",
+          "function": "claimThrone",
+          "lines": [
+            {
+              "start": 11,
+              "end": 11
+            }
+          ],
+          "function_lines": {
+            "start": 9,
+            "end": 14
+          },
+          "anchors": [
+            "require(king.send(highestBid)"
+          ]
+        }
+      ],
+      "acceptable_extra_classes": [],
+      "counterpart": "fixtures/contracts/patched/dos_push_payment.sol"
+    },
+    {
+      "path": "fixtures/contracts/vulnerable/bad_randomness.sol",
+      "category": "vulnerable",
+      "synthetic": true,
+      "sha256": "b2a3fd8e016bf2613fd853598afe9993ce6b0a96acd90087f61a7c8283687c5d",
+      "size_bytes": 671,
+      "pragma": "0.8.24",
+      "contracts": [
+        "CoinFlip"
+      ],
+      "expected_outcome": "analyze",
+      "accept": [
+        "job_completed"
+      ],
+      "expected_findings": [
+        {
+          "vuln_class": "bad_randomness",
+          "function": "flip",
+          "lines": [
+            {
+              "start": 14,
+              "end": 15
+            }
+          ],
+          "function_lines": {
+            "start": 10,
+            "end": 19
+          },
+          "anchors": [
+            "blockhash(block.number - 1)",
+            "bool side = entropy % 2 == 1;"
+          ]
+        }
+      ],
+      "acceptable_extra_classes": [
+        "timestamp_dependence"
+      ],
+      "counterpart": "fixtures/contracts/patched/bad_randomness.sol"
+    },
+    {
+      "path": "fixtures/contracts/patched/reentrancy_classic.sol",
+      "category": "patched",
+      "synthetic": true,
+      "sha256": "ab6b69063a8452d5836badd830d6f84e5af4883e1af9a7b3259f2900e331535a",
+      "size_bytes": 836,
+      "pragma": "0.8.24",
+      "contracts": [
+        "EtherBank"
+      ],
+      "expected_outcome": "analyze",
+      "accept": [
+        "job_completed"
+      ],
+      "expected_findings": [],
+      "acceptable_extra_classes": [
+        "reentrancy"
+      ],
+      "fix": "checks-effects-interactions + nonReentrant modifier",
+      "counterpart": "fixtures/contracts/vulnerable/reentrancy_classic.sol"
+    },
+    {
+      "path": "fixtures/contracts/patched/reentrancy_cross_function.sol",
+      "category": "patched",
+      "synthetic": true,
+      "sha256": "b887e9542272864c535f2f98d95d58e6aaac41c1e2b8401dd3458468d734c510",
+      "size_bytes": 1073,
+      "pragma": "0.6.12",
+      "contracts": [
+        "SharedLedger"
+      ],
+      "expected_outcome": "analyze",
+      "accept": [
+        "job_completed"
+      ],
+      "expected_findings": [],
+      "acceptable_extra_classes": [
+        "reentrancy"
+      ],
+      "fix": "state reset before call; nonReentrant on both withdrawBalance and transfer",
+      "counterpart": "fixtures/contracts/vulnerable/reentrancy_cross_function.sol"
+    },
+    {
+      "path": "fixtures/contracts/patched/unchecked_call.sol",
+      "category": "patched",
+      "synthetic": true,
+      "sha256": "5515c691e0d1aa24e2bb34f12c9b18559bd3b7e86a6f4185ee641615013d3d55",
+      "size_bytes": 698,
+      "pragma": "0.4.26",
+      "contracts": [
+        "PayoutBox"
+      ],
+      "expected_outcome": "analyze",
+      "accept": [
+        "job_completed"
+      ],
+      "expected_findings": [],
+      "acceptable_extra_classes": [
+        "other"
+      ],
+      "fix": "require() on send/call return values",
+      "counterpart": "fixtures/contracts/vulnerable/unchecked_call.sol"
+    },
+    {
+      "path": "fixtures/contracts/patched/tx_origin.sol",
+      "category": "patched",
+      "synthetic": true,
+      "sha256": "8c607ed6560687aaba18f1e093c5bc9eeb49a1d8be879243702a235b24dabda5",
+      "size_bytes": 430,
+      "pragma": "0.8.24",
+      "contracts": [
+        "OriginWallet"
+      ],
+      "expected_outcome": "analyze",
+      "accept": [
+        "job_completed"
+      ],
+      "expected_findings": [],
+      "acceptable_extra_classes": [],
+      "fix": "msg.sender instead of tx.origin",
+      "counterpart": "fixtures/contracts/vulnerable/tx_origin.sol"
+    },
+    {
+      "path": "fixtures/contracts/patched/timestamp_dependence.sol",
+      "category": "patched",
+      "synthetic": true,
+      "sha256": "f5a71f72cd091d53c7b0251421e12aaaf5aaa3501e9fcc73c23fe8fce09ffb00",
+      "size_bytes": 1231,
+      "pragma": "0.6.12",
+      "contracts": [
+        "FifteenSecondGame"
+      ],
+      "expected_outcome": "analyze",
+      "accept": [
+        "job_completed"
+      ],
+      "expected_findings": [],
+      "acceptable_extra_classes": [
+        "bad_randomness"
+      ],
+      "fix": "payout decided by owner commit-reveal, not block.timestamp",
+      "counterpart": "fixtures/contracts/vulnerable/timestamp_dependence.sol"
+    },
+    {
+      "path": "fixtures/contracts/patched/integer_overflow.sol",
+      "category": "patched",
+      "synthetic": true,
+      "sha256": "16156ccfe91a75643a280cdfcae61430c93cd289613a9d95d18247b814ed8951",
+      "size_bytes": 1559,
+      "pragma": "0.4.26",
+      "contracts": [
+        "SafeMath",
+        "BatchToken"
+      ],
+      "expected_outcome": "analyze",
+      "accept": [
+        "job_completed"
+      ],
+      "expected_findings": [],
+      "acceptable_extra_classes": [],
+      "fix": "SafeMath library (0.4.26)",
+      "counterpart": "fixtures/contracts/vulnerable/integer_overflow.sol"
+    },
+    {
+      "path": "fixtures/contracts/patched/integer_overflow_timelock.sol",
+      "category": "patched",
+      "synthetic": true,
+      "sha256": "9aae64c598427633acca30053e5ed9291f4488eac0e617e955d7866952199640",
+      "size_bytes": 811,
+      "pragma": "0.8.24",
+      "contracts": [
+        "TimeLock"
+      ],
+      "expected_outcome": "analyze",
+      "accept": [
+        "job_completed"
+      ],
+      "expected_findings": [],
+      "acceptable_extra_classes": [
+        "timestamp_dependence"
+      ],
+      "fix": "upgraded to solc 0.8.24 checked arithmetic",
+      "counterpart": "fixtures/contracts/vulnerable/integer_overflow_timelock.sol"
+    },
+    {
+      "path": "fixtures/contracts/patched/access_control_owner.sol",
+      "category": "patched",
+      "synthetic": true,
+      "sha256": "a45bda06ff60e7631230ee6b613cbef7cd24c7177fceee23e247ade7b093cd51",
+      "size_bytes": 620,
+      "pragma": "0.8.24",
+      "contracts": [
+        "Treasury"
+      ],
+      "expected_outcome": "analyze",
+      "accept": [
+        "job_completed"
+      ],
+      "expected_findings": [],
+      "acceptable_extra_classes": [],
+      "fix": "onlyOwner on setOwner + zero-address check",
+      "counterpart": "fixtures/contracts/vulnerable/access_control_owner.sol"
+    },
+    {
+      "path": "fixtures/contracts/patched/access_control_initializer.sol",
+      "category": "patched",
+      "synthetic": true,
+      "sha256": "143096500a863bbe323afb008ce18cdf270cbb040de5c7664d3c7c96a1c246b7",
+      "size_bytes": 849,
+      "pragma": "0.8.24",
+      "contracts": [
+        "UpgradeableVault"
+      ],
+      "expected_outcome": "analyze",
+      "accept": [
+        "job_completed"
+      ],
+      "expected_findings": [],
+      "acceptable_extra_classes": [],
+      "fix": "initializer restricted to deployer and one-shot flag",
+      "counterpart": "fixtures/contracts/vulnerable/access_control_initializer.sol"
+    },
+    {
+      "path": "fixtures/contracts/patched/delegatecall.sol",
+      "category": "patched",
+      "synthetic": true,
+      "sha256": "645048d17e6626519062fe17cf955b29a8ae3ed2fcfcf1fb74ce8c6200b819c6",
+      "size_bytes": 852,
+      "pragma": "0.8.24",
+      "contracts": [
+        "ProxyWallet"
+      ],
+      "expected_outcome": "analyze",
+      "accept": [
+        "job_completed"
+      ],
+      "expected_findings": [],
+      "acceptable_extra_classes": [
+        "delegatecall"
+      ],
+      "fix": "owner-only and allow-listed delegatecall targets",
+      "counterpart": "fixtures/contracts/vulnerable/delegatecall.sol"
+    },
+    {
+      "path": "fixtures/contracts/patched/unprotected_selfdestruct.sol",
+      "category": "patched",
+      "synthetic": true,
+      "sha256": "3b7e6dbe9ede8917bf889bc5fd4f9edb08aa147ad76293c9382e3caad48e0691",
+      "size_bytes": 404,
+      "pragma": "0.6.12",
+      "contracts": [
+        "Piggy"
+      ],
+      "expected_outcome": "analyze",
+      "accept": [
+        "job_completed"
+      ],
+      "expected_findings": [],
+      "acceptable_extra_classes": [],
+      "fix": "owner check; funds go to owner",
+      "counterpart": "fixtures/contracts/vulnerable/unprotected_selfdestruct.sol"
+    },
+    {
+      "path": "fixtures/contracts/patched/dos_unbounded_loop.sol",
+      "category": "patched",
+      "synthetic": true,
+      "sha256": "909a1c9ee45066edf5e00b933a72c31c2c42e8307d8af8bb687afee28435e7e1",
+      "size_bytes": 1343,
+      "pragma": "0.8.24",
+      "contracts": [
+        "Dividends"
+      ],
+      "expected_outcome": "analyze",
+      "accept": [
+        "job_completed"
+      ],
+      "expected_findings": [],
+      "acceptable_extra_classes": [
+        "denial_of_service",
+        "reentrancy"
+      ],
+      "fix": "paginated allocation + pull-payment claim",
+      "counterpart": "fixtures/contracts/vulnerable/dos_unbounded_loop.sol"
+    },
+    {
+      "path": "fixtures/contracts/patched/dos_push_payment.sol",
+      "category": "patched",
+      "synthetic": true,
+      "sha256": "8716059b9e14d92942d0f10fa999766896f1825bed64fe5c81598d6d2c301a23",
+      "size_bytes": 811,
+      "pragma": "0.6.12",
+      "contracts": [
+        "KingOfTheHill"
+      ],
+      "expected_outcome": "analyze",
+      "accept": [
+        "job_completed"
+      ],
+      "expected_findings": [],
+      "acceptable_extra_classes": [
+        "reentrancy"
+      ],
+      "fix": "pull-payment refunds",
+      "counterpart": "fixtures/contracts/vulnerable/dos_push_payment.sol"
+    },
+    {
+      "path": "fixtures/contracts/patched/bad_randomness.sol",
+      "category": "patched",
+      "synthetic": true,
+      "sha256": "343e70ed474d88b3296e813d6513d7b439d9b5c37adf0e0d1b66671eb5349b2b",
+      "size_bytes": 1301,
+      "pragma": "0.8.24",
+      "contracts": [
+        "CoinFlip"
+      ],
+      "expected_outcome": "analyze",
+      "accept": [
+        "job_completed"
+      ],
+      "expected_findings": [],
+      "acceptable_extra_classes": [
+        "bad_randomness",
+        "timestamp_dependence"
+      ],
+      "fix": "house commit-reveal secret instead of block values",
+      "counterpart": "fixtures/contracts/vulnerable/bad_randomness.sol"
+    },
+    {
+      "path": "fixtures/contracts/benign/simple_token.sol",
+      "category": "benign",
+      "synthetic": true,
+      "sha256": "d89a0e10e015d7a04f254c7346e1ea8c20e9b58a08128815ae6945004fccd8b5",
+      "size_bytes": 1745,
+      "pragma": "0.8.24",
+      "contracts": [
+        "SimpleToken"
+      ],
+      "expected_outcome": "analyze",
+      "accept": [
+        "job_completed"
+      ],
+      "expected_findings": [],
+      "acceptable_extra_classes": [],
+      "note": "ERC20-like token with 0.8 checked arithmetic"
+    },
+    {
+      "path": "fixtures/contracts/benign/simple_storage.sol",
+      "category": "benign",
+      "synthetic": true,
+      "sha256": "f0bec5c35fc9d39616927ce548210bcb695e973ff7c63c8178d84e0474c8c47e",
+      "size_bytes": 580,
+      "pragma": "0.8.24",
+      "contracts": [
+        "SimpleStorage"
+      ],
+      "expected_outcome": "analyze",
+      "accept": [
+        "job_completed"
+      ],
+      "expected_findings": [],
+      "acceptable_extra_classes": [],
+      "note": "owner-gated storage"
+    },
+    {
+      "path": "fixtures/contracts/benign/multisig_lite.sol",
+      "category": "benign",
+      "synthetic": true,
+      "sha256": "e63dd64657b49f4c59729fed4cd5872ee323509274f3c12af8ca982427c7e33c",
+      "size_bytes": 1553,
+      "pragma": "0.8.24",
+      "contracts": [
+        "MultiSigLite"
+      ],
+      "expected_outcome": "analyze",
+      "accept": [
+        "job_completed"
+      ],
+      "expected_findings": [],
+      "acceptable_extra_classes": [
+        "reentrancy",
+        "unchecked_call",
+        "other"
+      ],
+      "note": "2-of-3 multisig; executed flag set before low-level call with checked result (possible reentrancy/low-level-call FP)"
+    },
+    {
+      "path": "fixtures/contracts/benign/coarse_timelock.sol",
+      "category": "benign",
+      "synthetic": true,
+      "sha256": "a20755822140a32ef8b751aee33270ce64140fc161ea0cb83a791c64fdbfe11e",
+      "size_bytes": 754,
+      "pragma": "0.8.24",
+      "contracts": [
+        "CoarseTimelock"
+      ],
+      "expected_outcome": "analyze",
+      "accept": [
+        "job_completed"
+      ],
+      "expected_findings": [],
+      "acceptable_extra_classes": [
+        "timestamp_dependence"
+      ],
+      "note": "block.timestamp only for a day-granularity release window (possible timestamp_dependence FP)"
+    },
+    {
+      "path": "fixtures/contracts/benign/pull_payment_escrow.sol",
+      "category": "benign",
+      "synthetic": true,
+      "sha256": "07c42ba0838bba58a601e248f34fad6daac92a2bbb4eacdd66e1b97ee448c9be",
+      "size_bytes": 1199,
+      "pragma": "0.6.12",
+      "contracts": [
+        "PullPaymentEscrow"
+      ],
+      "expected_outcome": "analyze",
+      "accept": [
+        "job_completed"
+      ],
+      "expected_findings": [],
+      "acceptable_extra_classes": [
+        "reentrancy"
+      ],
+      "note": "pull-payment escrow following CEI (possible reentrancy FP)"
+    },
+    {
+      "path": "fixtures/contracts/malformed/syntax_error.sol",
+      "category": "malformed",
+      "synthetic": true,
+      "sha256": "318c942ec86fe25acae26b28f0451b00f9218bf08d5690458da36767c8dd8a68",
+      "size_bytes": 289,
+      "pragma": "0.8.24",
+      "contracts": [
+        "Broken"
+      ],
+      "expected_outcome": "compile_error",
+      "accept": [
+        "rejected_4xx",
+        "job_failed",
+        "completed_degraded"
+      ],
+      "expected_findings": [],
+      "note": "missing ';' and unbalanced parens"
+    },
+    {
+      "path": "fixtures/contracts/malformed/unsupported_pragma.sol",
+      "category": "malformed",
+      "synthetic": true,
+      "sha256": "f4ce0a6b2300452ebb29930073321637be0f080745b6e6a7259dc7995b0de35a",
+      "size_bytes": 207,
+      "pragma": "^0.3.0",
+      "contracts": [
+        "Ancient"
+      ],
+      "expected_outcome": "compile_error",
+      "accept": [
+        "rejected_4xx",
+        "job_failed",
+        "completed_degraded"
+      ],
+      "expected_findings": [],
+      "note": "pragma ^0.3.0 predates all supported solc releases"
+    },
+    {
+      "path": "fixtures/contracts/malformed/empty.sol",
+      "category": "malformed",
+      "synthetic": true,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0,
+      "pragma": null,
+      "contracts": [],
+      "expected_outcome": "reject_400",
+      "accept": [
+        "rejected_4xx",
+        "job_failed",
+        "completed_degraded"
+      ],
+      "expected_findings": [],
+      "note": "zero bytes"
+    },
+    {
+      "path": "fixtures/contracts/malformed/binary_garbage.sol",
+      "category": "malformed",
+      "synthetic": true,
+      "sha256": "09f790efb957c6dad587c309bb9fee26f49f5290d5a763af86676c21d6bdaf47",
+      "size_bytes": 4096,
+      "pragma": null,
+      "contracts": [],
+      "expected_outcome": "reject_400",
+      "accept": [
+        "rejected_4xx",
+        "job_failed",
+        "completed_degraded"
+      ],
+      "expected_findings": [],
+      "note": "ELF magic + 4 KiB deterministic random bytes (seed 1337)"
+    },
+    {
+      "path": "fixtures/contracts/malformed/non_utf8.sol",
+      "category": "malformed",
+      "synthetic": true,
+      "sha256": "691617b188288eebd9f7b1ce4f02380a4d0e1a5a71946c0c1736d0ca547b022c",
+      "size_bytes": 220,
+      "pragma": null,
+      "contracts": [],
+      "expected_outcome": "reject_400",
+      "accept": [
+        "rejected_4xx",
+        "job_failed",
+        "completed_degraded"
+      ],
+      "expected_findings": [],
+      "note": "latin-1 bytes (invalid UTF-8) in comment and string literal"
+    },
+    {
+      "path": "fixtures/contracts/malformed/long_line.sol",
+      "category": "malformed",
+      "synthetic": true,
+      "sha256": "23361d10d07468191e1359fbeeb53f95ea1765a7cc734a2fffb77e118f937b33",
+      "size_bytes": 80176,
+      "pragma": "0.8.24",
+      "contracts": [
+        "LongLine"
+      ],
+      "expected_outcome": "analyze_or_limit",
+      "accept": [
+        "job_completed",
+        "completed_degraded",
+        "job_failed",
+        "rejected_4xx"
+      ],
+      "expected_findings": [],
+      "note": "~80 KB single line (40000-term constant sum); valid Solidity, compiles with solc 0.8.24"
+    },
+    {
+      "path": "fixtures/contracts/resource/deep_nesting.sol",
+      "category": "resource",
+      "synthetic": true,
+      "sha256": "b250e1aaac9b8f772e76ec4c62504ee50d28f3ed32771c067d8f9f7e43ff5583",
+      "size_bytes": 2247,
+      "pragma": "0.8.24",
+      "contracts": [
+        "DeepNesting"
+      ],
+      "expected_outcome": "timeout_or_limit",
+      "accept": [
+        "job_completed",
+        "completed_degraded",
+        "job_failed",
+        "rejected_4xx"
+      ],
+      "expected_findings": [],
+      "note": "250-level nested parentheses; solc 0.8.24 reports 'Maximum recursion depth reached during parsing'",
+      "generated": false
+    },
+    {
+      "path": "fixtures/contracts/resource/many_functions.sol",
+      "category": "resource",
+      "synthetic": true,
+      "sha256": "4d9c53f7e6b614abb2f14069008e3948ba5c28e4aaabd28e42907625bcafed75",
+      "size_bytes": 167035,
+      "pragma": "0.8.24",
+      "contracts": [
+        "ManyFunctions"
+      ],
+      "expected_outcome": "analyze_or_limit",
+      "accept": [
+        "job_completed",
+        "completed_degraded",
+        "job_failed",
+        "rejected_4xx"
+      ],
+      "expected_findings": [],
+      "note": "2000 trivial external functions (~167 KB)",
+      "generated": false
+    },
+    {
+      "path": "fixtures/contracts/resource/generated/huge_contract.sol",
+      "category": "resource",
+      "synthetic": true,
+      "expected_outcome": "timeout_or_limit",
+      "accept": [
+        "job_completed",
+        "completed_degraded",
+        "job_failed",
+        "rejected_4xx"
+      ],
+      "expected_findings": [],
+      "note": "~460 KB generated contract just under the 512 KiB upload limit",
+      "generated": true,
+      "generator": "python fixtures/scripts/gen_resource.py --generated"
+    },
+    {
+      "path": "fixtures/contracts/resource/generated/oversize.sol",
+      "category": "resource",
+      "synthetic": true,
+      "expected_outcome": "reject_413",
+      "accept": [
+        "rejected_413"
+      ],
+      "expected_findings": [],
+      "note": "> 512 KiB generated file; must be rejected before analysis",
+      "generated": true,
+      "generator": "python fixtures/scripts/gen_resource.py --generated"
+    }
+  ]
+}
