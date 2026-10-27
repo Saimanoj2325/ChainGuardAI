@@ -1,0 +1,8 @@
+# ChainGuard AI backend (Python 3.12). Installed in the repo-root .venv.
+fastapi>=0.115
+pydantic>=2.7
+uvicorn[standard]>=0.30
+python-multipart>=0.0.9
+httpx>=0.27
+# tests
+pytest>=8
