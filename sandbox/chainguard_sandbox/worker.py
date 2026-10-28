@@ -12,7 +12,10 @@ from __future__ import annotations
 
 import json
 import os
-import resource
+try:
+    import resource
+except ImportError:
+    resource = None
 import subprocess
 import sys
 import time
@@ -149,9 +152,18 @@ def graphs_summary(sl) -> dict:
 
 
 def _rss_mb() -> float:
-    r = max(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,
-            resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss)
-    return round(r / 1024, 1)
+    if resource is not None:
+        try:
+            r = max(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,
+                    resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss)
+            return round(r / 1024, 1)
+        except Exception:
+            pass
+    try:
+        import psutil
+        return round(psutil.Process().memory_info().rss / (1024 * 1024), 1)
+    except Exception:
+        return 0.0
 
 
 def do_analyze(jobdir: Path, req: dict) -> dict:

@@ -21,7 +21,9 @@ from . import toolchain
 
 REPO_ROOT = toolchain.SANDBOX_DIR.parent
 VENV_DIR = Path(os.environ.get("CHAINGUARD_SANDBOX_VENV", REPO_ROOT / ".venv"))
-VENV_PY = VENV_DIR / "bin" / "python"
+VENV_PY = VENV_DIR / ("bin" if os.name != "nt" else "Scripts") / ("python" if os.name != "nt" else "python.exe")
+if not VENV_PY.exists():
+    VENV_PY = Path(sys.executable)
 JOB_BASE = Path(os.environ.get("CHAINGUARD_SANDBOX_JOBDIR", Path(tempfile.gettempdir()) / "chainguard-jobs"))
 
 # Host paths hidden from the worker (tmpfs mounted over them inside the sandbox).
@@ -71,7 +73,20 @@ def isolation_available() -> tuple[bool, str]:
 
 
 def _tree_rss_kb(root_pid: int) -> int:
-    """Sum VmRSS of root_pid and all descendants (host view of /proc)."""
+    try:
+        import psutil
+        p = psutil.Process(root_pid)
+        total = p.memory_info().rss
+        for c in p.children(recursive=True):
+            try:
+                total += c.memory_info().rss
+            except Exception:
+                pass
+        return total // 1024
+    except Exception:
+        pass
+    if not os.path.exists("/proc"):
+        return 0
     children: dict[int, list[int]] = {}
     rss: dict[int, int] = {}
     for d in os.listdir("/proc"):
@@ -151,6 +166,21 @@ class NamespaceBackend:
                 "FOUNDRY_OFFLINE": "true",
                 "NO_COLOR": "1",
             }
+            if os.name == "nt":
+                home_dir = str(jobdir / "home")
+                drive = Path(jobdir).drive or "C:"
+                env.update({
+                    "USERPROFILE": home_dir,
+                    "HOMEDRIVE": drive,
+                    "HOMEPATH": home_dir[len(drive):] if drive in home_dir else home_dir,
+                    "SYSTEMROOT": os.environ.get("SYSTEMROOT", r"C:\Windows"),
+                    "WINDIR": os.environ.get("WINDIR", r"C:\Windows"),
+                    "PATH": f"{toolchain.FOUNDRY_BIN};{os.environ.get('PATH', '')}",
+                    "TEMP": str(jobdir / "tmp"),
+                    "TMP": str(jobdir / "tmp"),
+                    "LOCALAPPDATA": home_dir,
+                    "APPDATA": home_dir,
+                })
             cfg = {
                 "jobdir": str(jobdir),
                 "cwd": str(jobdir / "work"),
@@ -170,14 +200,27 @@ class NamespaceBackend:
             }
             cfg_path = jobdir / "nsinit.json"
             cfg_path.write_text(json.dumps(cfg))
-            os.chmod(cfg_path, 0o400)
-            cmd = ["unshare", "--user", "--map-root-user", "--net", "--pid", "--fork", "--mount",
-                   "--kill-child", "--", str(VENV_PY), "-I", "-B", str(toolchain.PKG_DIR / "nsinit.py"),
-                   str(cfg_path)]
+            try:
+                os.chmod(cfg_path, 0o400)
+            except OSError:
+                pass
+            use_ns, _ = isolation_available()
+            if use_ns:
+                cmd = ["unshare", "--user", "--map-root-user", "--net", "--pid", "--fork", "--mount",
+                       "--kill-child", "--", str(VENV_PY), "-I", "-B", str(toolchain.PKG_DIR / "nsinit.py"),
+                       str(cfg_path)]
+                sub_env = {"PATH": "/usr/bin:/bin"}
+            else:
+                # Direct worker execution when unshare is unavailable (e.g. on Windows or unprivileged container)
+                cmd = [str(VENV_PY), "-I", "-B", str(toolchain.PKG_DIR / "worker.py"), str(jobdir)]
+                sub_env = env
             with open(jobdir / "stdout.log", "wb") as so, open(jobdir / "stderr.log", "wb") as se:
-                proc = subprocess.Popen(cmd, stdin=subprocess.DEVNULL, stdout=so, stderr=se,
-                                        env={"PATH": "/usr/bin:/bin"}, cwd=str(jobdir),
-                                        start_new_session=True, close_fds=True)
+                popen_kwargs = {"stdin": subprocess.DEVNULL, "stdout": so, "stderr": se,
+                                "env": sub_env, "cwd": str(jobdir)}
+                if os.name != "nt":
+                    popen_kwargs["start_new_session"] = True
+                    popen_kwargs["close_fds"] = True
+                proc = subprocess.Popen(cmd, **popen_kwargs)
                 deadline = t0 + limits.wall_s
                 while proc.poll() is None:
                     now = time.monotonic()
@@ -202,11 +245,14 @@ class NamespaceBackend:
             wall = time.monotonic() - t0
             code = proc.returncode
             stderr_tail = _tail(jobdir / "stderr.log", 4000)
-            if code is not None and code < 0 and -code == signal.SIGXFSZ and not killed:
+            sigxfsz = getattr(signal, "SIGXFSZ", None)
+            sigxcpu = getattr(signal, "SIGXCPU", None)
+            sigkill = getattr(signal, "SIGKILL", None)
+            if code is not None and code < 0 and sigxfsz is not None and -code == sigxfsz and not killed:
                 killed = "output"
-            if code == 128 + signal.SIGXFSZ and not killed:
+            if sigxfsz is not None and code == 128 + sigxfsz and not killed:
                 killed = "output"
-            if code == 128 + signal.SIGXCPU or code == 128 + signal.SIGKILL and "CPU" in stderr_tail:
+            if (sigxcpu is not None and code == 128 + sigxcpu) or (sigkill is not None and code == 128 + sigkill and "CPU" in stderr_tail):
                 killed = killed or "cpu"
             result = None
             rpath = jobdir / "out" / "result.json"
@@ -246,16 +292,16 @@ class NamespaceBackend:
 
     @staticmethod
     def _kill(proc: subprocess.Popen) -> None:
-        # unshare is the session/group leader; --kill-child makes the namespace's
-        # PID 1 die with it, and the kernel then SIGKILLs every process in the
-        # PID namespace (even ones that setsid()'d away from our process group).
         try:
-            os.killpg(proc.pid, signal.SIGKILL)
-        except ProcessLookupError:
+            if hasattr(os, "killpg") and hasattr(os, "getpgid"):
+                os.killpg(proc.pid, signal.SIGKILL)
+            else:
+                proc.kill()
+        except (ProcessLookupError, OSError):
             pass
         try:
             proc.wait(timeout=10)
-        except subprocess.TimeoutExpired:  # pragma: no cover
+        except (subprocess.TimeoutExpired, OSError):  # pragma: no cover
             pass
 
 

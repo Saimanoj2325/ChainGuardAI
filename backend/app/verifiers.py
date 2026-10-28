@@ -94,7 +94,8 @@ class LLMVerifier:
                 r = c.post("/chat/completions", json=body, headers={"Authorization": f"Bearer {self.s.llm_api_key}"})
             if r.status_code != 200:
                 return LLMVerdict.error, f"LLM HTTP {r.status_code}: {r.text[:200]}"
-            content = r.json()["choices"][0]["message"]["content"]
+            msg = r.json()["choices"][0]["message"]
+            content = msg.get("content") or msg.get("reasoning_content") or ""
             return parse_verdict(content)
         except (ValueError, KeyError, IndexError, TypeError) as e:
             return LLMVerdict.error, f"Unparseable LLM response: {e}"[:500]

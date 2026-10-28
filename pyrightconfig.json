@@ -1,0 +1,8 @@
+{
+  "extraPaths": [
+    "backend",
+    "shared",
+    "sandbox",
+    "ml"
+  ]
+}

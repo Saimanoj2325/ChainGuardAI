@@ -5,8 +5,16 @@ import hmac
 import json
 import logging
 import os
+import sys
 import uuid
 from contextlib import asynccontextmanager
+from pathlib import Path
+
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+for _p in ("ml", "shared", "sandbox"):
+    _fp = str(_REPO_ROOT / _p)
+    if _fp not in sys.path:
+        sys.path.insert(0, _fp)
 
 from fastapi import FastAPI, File, Query, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware

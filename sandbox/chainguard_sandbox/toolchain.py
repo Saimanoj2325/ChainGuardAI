@@ -65,10 +65,13 @@ def installed() -> dict[Version, Solc]:
             out[v] = Solc(fmt(v), "wasm", str(p))
     if NATIVE_DIR.is_dir():  # native wins over wasm for the same version
         for p in NATIVE_DIR.glob("solc-*"):
-            if p.suffix == ".tmp" or not os.access(p, os.X_OK):
+            if p.suffix in (".tmp", ".crdownload") or (os.name != "nt" and not os.access(p, os.X_OK)):
                 continue
+            ver_name = p.name[len("solc-"):]
+            if ver_name.endswith(".exe"):
+                ver_name = ver_name[:-4]
             try:
-                v = parse_version(p.name[len("solc-"):])
+                v = parse_version(ver_name)
             except ValueError:
                 continue
             out[v] = Solc(fmt(v), "native", str(p))

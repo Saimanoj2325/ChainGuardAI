@@ -1,0 +1,14 @@
+{
+  "python.analysis.extraPaths": [
+    "${workspaceFolder}/backend",
+    "${workspaceFolder}/shared",
+    "${workspaceFolder}/sandbox",
+    "${workspaceFolder}/ml"
+  ],
+  "python.autoComplete.extraPaths": [
+    "${workspaceFolder}/backend",
+    "${workspaceFolder}/shared",
+    "${workspaceFolder}/sandbox",
+    "${workspaceFolder}/ml"
+  ]
+}

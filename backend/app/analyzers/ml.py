@@ -6,6 +6,14 @@ from __future__ import annotations
 
 import importlib
 import logging
+import sys
+from pathlib import Path
+
+_ROOT = Path(__file__).resolve().parents[3]
+if str(_ROOT / "ml") not in sys.path:
+    sys.path.insert(0, str(_ROOT / "ml"))
+if str(_ROOT / "shared") not in sys.path:
+    sys.path.insert(0, str(_ROOT / "shared"))
 
 log = logging.getLogger("chainguard.ml")
 
